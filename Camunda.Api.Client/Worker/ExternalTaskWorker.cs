@@ -1,6 +1,7 @@
 ﻿using Camunda.Api.Client.ExternalTask;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,26 +25,21 @@ namespace Camunda.Api.Client.Worker
             this.taskWorkerInfo = taskWorkerInfo;
         }
 
-        public void DoPolling()
+        public async Task DoPolling()
         {
             // Query External Tasks
             try
             {
-                var tasks = externalTaskService.FetchAndLock(new FetchExternalTasks()
+                var tasks = await externalTaskService.FetchAndLock(new FetchExternalTasks()
                 {
                     WorkerId = workerId,
                     MaxTasks = maxTasksToFetchAtOnce,
                     Topics = new List<FetchExternalTaskTopic>() {
                         new FetchExternalTaskTopic(taskWorkerInfo.TopicName,lockDurationInMilliseconds) { Variables = taskWorkerInfo.VariablesToFetch }
                     }
-                }).Result;
+                });
 
-                // run them in parallel with a max degree of parallelism
-                Parallel.ForEach(
-                    tasks,
-                    new ParallelOptions { MaxDegreeOfParallelism = this.maxDegreeOfParallelism },
-                    externalTask => Execute(externalTask)
-                );
+                await Task.WhenAll(tasks.Select(externalTask => Execute(externalTask)).ToArray());
             }
             catch (Exception ex)
             {
@@ -58,63 +54,58 @@ namespace Camunda.Api.Client.Worker
             }
         }
 
-        private void Execute(LockedExternalTask externalTask)
+        private async Task Execute(LockedExternalTask externalTask)
         {
             Console.WriteLine($"Execute External Task from topic '{taskWorkerInfo.TopicName}': {externalTask}...");
             try
             {
                 var variables = taskWorkerInfo.TaskAdapter.Execute(externalTask);
                 Console.WriteLine($"...finished External Task {externalTask.Id}");
-                externalTaskService[externalTask.Id].Complete(new CompleteExternalTask()
+                await externalTaskService[externalTask.Id].Complete(new CompleteExternalTask()
                 {
                     WorkerId = workerId,
                     Variables = variables
-                }).Wait();
+                });
             }
             catch (UnrecoverableBusinessErrorException ex)
             {
                 Console.WriteLine($"...failed with business error code from External Task  {externalTask.Id}");
-                externalTaskService[externalTask.Id].HandleBpmnError(new ExternalTaskBpmnError()
+                await externalTaskService[externalTask.Id].HandleBpmnError(new ExternalTaskBpmnError()
                 {
                     WorkerId = workerId,
                     ErrorCode = ex.BusinessErrorCode,
                     ErrorMessage = ex.Message
-                }).Wait();
+                });
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"...failed External Task  {externalTask.Id}");
-                var retriesLeft = taskWorkerInfo.Retries; // start with default
-                if (externalTask.Retries.HasValue) // or decrement if retries are already set
-                {
-                    retriesLeft = externalTask.Retries.Value - 1;
-                }
-                externalTaskService[externalTask.Id].HandleFailure(new ExternalTaskFailure()
+                await externalTaskService[externalTask.Id].HandleFailure(new ExternalTaskFailure()
                 {
                     WorkerId = workerId,
-                    Retries = retriesLeft,
+                    Retries = externalTask.Retries.HasValue ? externalTask.Retries.Value - 1 : taskWorkerInfo.Retries,
                     RetryTimeout = taskWorkerInfo.RetryTimeout,
                     ErrorMessage = ex.Message
-                }).Wait();
+                });
             }
         }
 
         public void StartWork()
         {
-            this.taskQueryTimer = new Timer(_ => DoPolling(), null, pollingIntervalInMilliseconds, Timeout.Infinite);
+            taskQueryTimer = new Timer(_ => DoPolling().Wait(), null, pollingIntervalInMilliseconds, Timeout.Infinite);
         }
 
         public void StopWork()
         {
-            this.taskQueryTimer.Dispose();
-            this.taskQueryTimer = null;
+            taskQueryTimer.Dispose();
+            taskQueryTimer = null;
         }
 
         public void Dispose()
         {
-            if (this.taskQueryTimer != null)
+            if (taskQueryTimer != null)
             {
-                this.taskQueryTimer.Dispose();
+                taskQueryTimer.Dispose();
             }
         }
     }

@@ -32,8 +32,7 @@ namespace Camunda.Api.Client.Worker
 
         public void StartWork()
         {
-
-            this.taskQueryTimer = new Timer(_ => DoPolling(), null, pollingIntervalInMilliseconds, Timeout.Infinite);
+            taskQueryTimer = new Timer(_ => DoPolling().Wait(), null, pollingIntervalInMilliseconds, Timeout.Infinite);
         }
 
         public void StopWork()
@@ -50,16 +49,15 @@ namespace Camunda.Api.Client.Worker
             }
         }
 
-        public void DoPolling()
+        public async Task DoPolling()
         {
             // Query External Tasks
             try
             {
-                var camundaPendingTasks = externalTaskService.Query().List().Result;
+                var camundaPendingTasks = await externalTaskService.Query().List();
 
-                Parallel.ForEach(camundaPendingTasks, new ParallelOptions { MaxDegreeOfParallelism = this.maxDegreeOfParallelism }, camundaPendingTask =>
+                await Task.WhenAll(camundaPendingTasks.Select(async camundaPendingTask =>
                 {
-
                     try
                     {
                         // get the assembly in the list
@@ -74,14 +72,14 @@ namespace Camunda.Api.Client.Worker
                             }
 
                             var worker = workers.Single();
-                            var tasks = externalTaskService.FetchAndLock(new FetchExternalTasks()
+                            var tasks = await externalTaskService.FetchAndLock(new FetchExternalTasks()
                             {
                                 WorkerId = workerId,
                                 MaxTasks = 1,
                                 Topics = new List<FetchExternalTaskTopic>() {
                                     new FetchExternalTaskTopic(camundaPendingTask.TopicName, lockDurationInMilliseconds) { Variables = worker.VariablesToFetch }
                                 }
-                            }).Result;
+                            });
 
                             if (tasks.Count() > 1)
                             {
@@ -93,19 +91,15 @@ namespace Camunda.Api.Client.Worker
                                 //logger.Warn(string.Format(@"another worker is locked for the task id {0}.", camundaPendingTask.id));
                             }
 
-                            var task = tasks.Single();
-
-                            Execute(task, worker);
+                            await Execute(tasks.Single(), worker);
                         }
-
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
                         //logger.Error(ex);
                     }
-                });
-
+                }).ToArray());
             }
             catch (Exception ex)
             //catch (EngineException ex)
@@ -118,28 +112,27 @@ namespace Camunda.Api.Client.Worker
             // schedule next run (if not stopped in between)
             if (taskQueryTimer != null)
             {
-                taskQueryTimer.Change(TimeSpan.FromMilliseconds(this.pollingIntervalInMilliseconds), TimeSpan.FromMilliseconds(Timeout.Infinite));
+                taskQueryTimer.Change(TimeSpan.FromMilliseconds(pollingIntervalInMilliseconds), TimeSpan.FromMilliseconds(Timeout.Infinite));
             }
-
         }
 
-        private void Execute(LockedExternalTask externalTask, ExternalTaskWorkerInfo taskWorkerInfo)
+        private async Task Execute(LockedExternalTask externalTask, ExternalTaskWorkerInfo taskWorkerInfo)
         {
             //logger.Info(string.Format(@"Execute external task for process id {0} and activity id {1}", taskWorkerInfo.ProcessId, taskWorkerInfo.ActivityId));
             try
             {
                 var resultVariables = taskWorkerInfo.TaskAdapter.Execute(externalTask);
                 //logger.Info($"...finished External Task {externalTask.Id}");
-                externalTaskService[externalTask.Id].Complete(new CompleteExternalTask()
+                await externalTaskService[externalTask.Id].Complete(new CompleteExternalTask()
                 {
                     WorkerId = workerId,
                     Variables = resultVariables
-                }).Wait();
+                });
             }
             catch (UnrecoverableBusinessErrorException ex)
             {
                 //logger.Warn($"...failed with business error code from External Task  {externalTask.Id}", ex);
-                externalTaskService[externalTask.Id].HandleBpmnError(new ExternalTaskBpmnError()
+                await externalTaskService[externalTask.Id].HandleBpmnError(new ExternalTaskBpmnError()
                 {
                     WorkerId = workerId,
                     ErrorCode = ex.BusinessErrorCode,
@@ -154,13 +147,13 @@ namespace Camunda.Api.Client.Worker
                 {
                     retriesLeft = externalTask.Retries.Value - 1;
                 }
-                externalTaskService[externalTask.Id].HandleFailure(new ExternalTaskFailure()
+                await externalTaskService[externalTask.Id].HandleFailure(new ExternalTaskFailure()
                 {
                     WorkerId = workerId,
                     Retries = retriesLeft,
                     RetryTimeout = taskWorkerInfo.RetryTimeout,
-                    ErrorMessage = ex.Message,
-                }).Wait();
+                    ErrorMessage = ex.Message
+                });
             }
         }
 

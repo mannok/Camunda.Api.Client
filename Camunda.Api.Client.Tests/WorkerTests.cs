@@ -19,56 +19,58 @@ namespace Camunda.Api.Client.Tests
         public WorkerService workerService { get; set; }
 
         [OneTimeSetUp]
-        public void Setup()
+        public async Task Setup()
         {
             camundaClient = CamundaClient.Create("http://192.168.17.158:39090/engine-rest");
 
             // deploy BPMN
-            var pdDeploymentID = camundaClient.Deployments.Create(
+            var pdDeployment = await camundaClient.Deployments.Create(
                 "CamundaEngineLibraryTest",
                 new ResourceDataContent(File.OpenRead($@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\BPMN\CamundaEngineLibraryTest.bpmn"), "CamundaEngineLibraryTest.bpmn")
-            ).Result.Id;
+            );
 
-            TargetProcessDefinitionInfo = camundaClient.ProcessDefinitions.Query(new ProcessDefinitionQuery()
+            var pdDeploymentID = pdDeployment.Id;
+
+            TargetProcessDefinitionInfo = (await camundaClient.ProcessDefinitions.Query(new ProcessDefinitionQuery()
             {
                 DeploymentId = pdDeploymentID
-            }).List().Result.Single();
+            }).List()).Single();
 
             workerService = new WorkerService(camundaClient, Assembly.GetExecutingAssembly());
             workerService.StartupWithSingleThreadPolling();
         }
 
         [OneTimeTearDown]
-        public void Cleanup()
+        public async Task Cleanup()
         {
-            camundaClient.Deployments[TargetProcessDefinitionInfo.DeploymentId].Delete(true).Wait();
+            await camundaClient.Deployments[TargetProcessDefinitionInfo.DeploymentId].Delete(true);
         }
 
         [Test, Order(1)]
-        public void TestStartupWithSingleThreadPolling()
+        public async Task TestStartupWithSingleThreadPolling()
         {
-            var piInfo = camundaClient.ProcessDefinitions[TargetProcessDefinitionInfo.Id].StartProcessInstance(new StartProcessInstance() { }).Result;
+            var piInfo = await camundaClient.ProcessDefinitions[TargetProcessDefinitionInfo.Id].StartProcessInstance(new StartProcessInstance() { });
 
             System.Threading.Thread.Sleep(10000);
 
-            var hpi = camundaClient.History.ProcessInstances.Query(new HistoricProcessInstanceQuery() { ProcessInstanceId = piInfo.Id }).List().Result.SingleOrDefault();
+            var hpi = (await camundaClient.History.ProcessInstances.Query(new HistoricProcessInstanceQuery() { ProcessInstanceId = piInfo.Id }).List()).SingleOrDefault();
 
             Assert.IsNotNull(hpi, "process instance cannot be processed by agent");
         }
 
         [Test, Order(2)]
-        public void StressTest()
+        public async Task StressTest()
         {
-            var piInfos = Task.WhenAll(Enumerable.Range(0, 30).AsParallel().Select(x =>
+            var piInfos = await Task.WhenAll(Enumerable.Range(0, 30).AsParallel().Select(x =>
                 camundaClient.ProcessDefinitions[TargetProcessDefinitionInfo.Id].StartProcessInstance(new StartProcessInstance() { })
-            ).ToArray()).Result;
+            ).ToArray());
 
             System.Threading.Thread.Sleep(50000);
 
-            var hpis = camundaClient.History.ProcessInstances.Query(new HistoricProcessInstanceQuery()
+            var hpis = await camundaClient.History.ProcessInstances.Query(new HistoricProcessInstanceQuery()
             {
                 ProcessInstanceIds = piInfos.Select(x => x.Id).ToList()
-            }).List().Result;
+            }).List();
 
             Assert.IsTrue(piInfos.Length == hpis.Count(), "stress test not pass");
         }
