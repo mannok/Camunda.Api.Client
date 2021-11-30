@@ -6,11 +6,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using Camunda.Api.Client.ExternalTask;
+using Common.Logging;
 
 namespace Camunda.Api.Client.Worker
 {
     public class ExternalTaskListener
     {
+        private ILog logger = LogManager.GetLogger(typeof(ExternalTaskListener));
+
         private string workerId = Guid.NewGuid().ToString();
 
         private long pollingIntervalInMilliseconds; // every 50 milliseconds
@@ -83,12 +86,11 @@ namespace Camunda.Api.Client.Worker
 
                             if (tasks.Count() > 1)
                             {
-                                //throw new EngineException("More than one task return from Camunda");
                                 throw new Exception("More than one task return from Camunda");
                             }
                             else if (tasks.Count() <= 1)
                             {
-                                //logger.Warn(string.Format(@"another worker is locked for the task id {0}.", camundaPendingTask.id));
+                                logger.Warn(string.Format(@"another worker is locked for the task id {0}.", camundaPendingTask.Id));
                             }
 
                             await Execute(tasks.Single(), worker);
@@ -97,16 +99,15 @@ namespace Camunda.Api.Client.Worker
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        //logger.Error(ex);
+                        logger.Error(ex);
                     }
                 }).ToArray());
             }
             catch (Exception ex)
-            //catch (EngineException ex)
             {
                 // Most probably server is not running or request is invalid
                 Console.WriteLine(ex.Message);
-                //logger.Fatal(ex);
+                logger.Fatal(ex);
             }
 
             // schedule next run (if not stopped in between)
@@ -118,11 +119,11 @@ namespace Camunda.Api.Client.Worker
 
         private async Task Execute(LockedExternalTask externalTask, ExternalTaskWorkerInfo taskWorkerInfo)
         {
-            //logger.Info(string.Format(@"Execute external task for process id {0} and activity id {1}", taskWorkerInfo.ProcessId, taskWorkerInfo.ActivityId));
+            logger.Info(string.Format(@"Execute external task for process id {0} and activity id {1}", taskWorkerInfo.ProcessId, taskWorkerInfo.ActivityId));
             try
             {
                 var resultVariables = taskWorkerInfo.TaskAdapter.Execute(externalTask);
-                //logger.Info($"...finished External Task {externalTask.Id}");
+                logger.Info($"...finished External Task {externalTask.Id}");
                 await externalTaskService[externalTask.Id].Complete(new CompleteExternalTask()
                 {
                     WorkerId = workerId,
@@ -131,7 +132,7 @@ namespace Camunda.Api.Client.Worker
             }
             catch (UnrecoverableBusinessErrorException ex)
             {
-                //logger.Warn($"...failed with business error code from External Task  {externalTask.Id}", ex);
+                logger.Warn($"...failed with business error code from External Task  {externalTask.Id}", ex);
                 await externalTaskService[externalTask.Id].HandleBpmnError(new ExternalTaskBpmnError()
                 {
                     WorkerId = workerId,
@@ -141,7 +142,7 @@ namespace Camunda.Api.Client.Worker
             }
             catch (Exception ex)
             {
-                //logger.Error($"...failed External Task  {externalTask.Id}", ex);
+                logger.Error($"...failed External Task  {externalTask.Id}", ex);
                 var retriesLeft = taskWorkerInfo.Retries; // start with default
                 if (externalTask.Retries.HasValue) // or decrement if retries are already set
                 {

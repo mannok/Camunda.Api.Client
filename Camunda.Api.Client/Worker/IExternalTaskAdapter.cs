@@ -8,6 +8,4 @@ namespace Camunda.Api.Client.Worker
     {
         Dictionary<string, VariableValue> Execute(LockedExternalTask externalTask);
     }
-
-
 }
