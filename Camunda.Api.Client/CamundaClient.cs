@@ -30,7 +30,6 @@ using Camunda.Api.Client.VariableInstance;
 
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 using Camunda.Api.Client.Filter;
-using Camunda.Api.Client.Worker;
 using Common.Logging;
 
 namespace Camunda.Api.Client
@@ -334,7 +333,5 @@ namespace Camunda.Api.Client
 
         /// <see href="https://docs.camunda.org/manual/7.9/reference/rest/filter/"/>
         public FilterService Filters => new FilterService(_filterApi.Value);
-
-        public WorkerService WorkerService => new WorkerService(ExternalTasks, _enteryAssembly);
     }
 }

@@ -16,11 +16,12 @@ namespace Camunda.Api.Client.Tests
     {
         public CamundaClient camundaClient { get; set; }
         public ProcessDefinitionInfo TargetProcessDefinitionInfo { get; set; }
+        public WorkerService workerService { get; set; }
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
-            camundaClient = CamundaClient.Create("http://localhost:19090/engine-rest", Assembly.GetExecutingAssembly());
+            camundaClient = CamundaClient.Create("http://192.168.17.158:39090/engine-rest");
 
             // deploy BPMN
             var pdDeploymentID = camundaClient.Deployments.Create(
@@ -32,9 +33,12 @@ namespace Camunda.Api.Client.Tests
             {
                 DeploymentId = pdDeploymentID
             }).List().Result.Single();
+
+            workerService = new WorkerService(camundaClient, Assembly.GetExecutingAssembly());
+            workerService.StartupWithSingleThreadPolling();
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void Cleanup()
         {
             camundaClient.Deployments[TargetProcessDefinitionInfo.DeploymentId].Delete(true).Wait();
@@ -44,8 +48,6 @@ namespace Camunda.Api.Client.Tests
         public void TestStartupWithSingleThreadPolling()
         {
             var piInfo = camundaClient.ProcessDefinitions[TargetProcessDefinitionInfo.Id].StartProcessInstance(new StartProcessInstance() { }).Result;
-
-            camundaClient.WorkerService.StartupWithSingleThreadPolling();
 
             System.Threading.Thread.Sleep(10000);
 
@@ -60,8 +62,6 @@ namespace Camunda.Api.Client.Tests
             var piInfos = Task.WhenAll(Enumerable.Range(0, 30).AsParallel().Select(x =>
                 camundaClient.ProcessDefinitions[TargetProcessDefinitionInfo.Id].StartProcessInstance(new StartProcessInstance() { })
             ).ToArray()).Result;
-
-            camundaClient.WorkerService.StartupWithSingleThreadPolling();
 
             System.Threading.Thread.Sleep(50000);
 

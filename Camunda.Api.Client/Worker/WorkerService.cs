@@ -11,19 +11,21 @@ namespace Camunda.Api.Client
 {
     public class WorkerService
     {
-
         private ILog logger = LogManager.GetLogger(typeof(WorkerService));
 
+        private CamundaClient _camundaClient;
         private ExternalTaskListener _listener;
         private IList<ExternalTaskWorker> _workers = new List<ExternalTaskWorker>();
-        //private CamundaClientHelper _camundaClientHelper;
-        private ExternalTaskService _externalTaskService;
         private Assembly _entryAssembly;
 
-        public WorkerService(ExternalTaskService externalTaskService, Assembly entryAssembly)
+        public WorkerService(string hostUrl, Assembly entryAssembly = null)
+            : this(CamundaClient.Create(hostUrl), entryAssembly)
+        { }
+
+        public WorkerService(CamundaClient camundaClient, Assembly entryAssembly = null)
         {
-            _externalTaskService = externalTaskService;
-            _entryAssembly = entryAssembly;
+            _camundaClient = camundaClient;
+            _entryAssembly = entryAssembly ?? Assembly.GetEntryAssembly();
         }
 
         /// <summary>
@@ -48,7 +50,7 @@ namespace Camunda.Api.Client
 
             CheckWorkers(externalTaskWorkers);
 
-            _listener = new ExternalTaskListener(_externalTaskService, externalTaskWorkers);
+            _listener = new ExternalTaskListener(_camundaClient.ExternalTasks, externalTaskWorkers);
             _listener.StartWork();
         }
 
@@ -151,7 +153,7 @@ namespace Camunda.Api.Client
             foreach (var taskWorkerInfo in externalTaskWorkers)
             {
                 Console.WriteLine($"Register Task Worker for Topic '{taskWorkerInfo.TopicName}'");
-                var worker = new ExternalTaskWorker(_externalTaskService, taskWorkerInfo);
+                var worker = new ExternalTaskWorker(_camundaClient.ExternalTasks, taskWorkerInfo);
                 _workers.Add(worker);
                 worker.StartWork();
             }
