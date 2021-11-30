@@ -30,14 +30,11 @@ using Camunda.Api.Client.VariableInstance;
 
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 using Camunda.Api.Client.Filter;
-using Common.Logging;
 
 namespace Camunda.Api.Client
 {
     public class CamundaClient
     {
-        private ILog logger = LogManager.GetLogger(typeof(CamundaClient));
-
         private Lazy<ICaseDefinitionRestService> _caseDefinitionRestService;
         private Lazy<ICaseExecutionRestService> _caseExecutionRestService;
         private Lazy<ICaseInstanceRestService> _caseInstanceRestService;
@@ -63,7 +60,6 @@ namespace Camunda.Api.Client
         private HistoricApi _historicApi;
 
         private string _hostUrl;
-        private Assembly _enteryAssembly;
         private HttpClient _httpClient;
 
         private RefitSettings _refitSettings;
@@ -178,25 +174,22 @@ namespace Camunda.Api.Client
             protected override string ResolveDictionaryKey(string dictionaryKey) => dictionaryKey;
         }
 
-        private CamundaClient(string hostUrl, Assembly enteryAssembly)
+        private CamundaClient(string hostUrl)
         {
-            _enteryAssembly = enteryAssembly;
             _hostUrl = hostUrl;
             Initialize();
             CreateServices();
         }
 
-        private CamundaClient(HttpClient httpClient, Assembly enteryAssembly)
+        private CamundaClient(HttpClient httpClient)
         {
-            _enteryAssembly = enteryAssembly;
             _httpClient = httpClient;
             Initialize();
             CreateServices();
         }
 
-        private CamundaClient(string hostUrl, HttpMessageHandler httpMessageHandler, Assembly enteryAssembly)
+        private CamundaClient(string hostUrl, HttpMessageHandler httpMessageHandler)
         {
-            _enteryAssembly = enteryAssembly;
             _hostUrl = hostUrl;
             _httpMessageHandler = httpMessageHandler;
             Initialize();
@@ -253,19 +246,19 @@ namespace Camunda.Api.Client
                 return new Lazy<I>(() => RestService.For<I>(_hostUrl, _refitSettings));
         }
 
-        public static CamundaClient Create(string hostUrl, Assembly enteryAssembly = null)
+        public static CamundaClient Create(string hostUrl)
         {
-            return new CamundaClient(hostUrl, enteryAssembly);
+            return new CamundaClient(hostUrl);
         }
 
-        public static CamundaClient Create(string hostUrl, HttpMessageHandler httpMessageHandler, Assembly enteryAssembly = null)
+        public static CamundaClient Create(string hostUrl, HttpMessageHandler httpMessageHandler)
         {
-            return new CamundaClient(hostUrl, httpMessageHandler, enteryAssembly);
+            return new CamundaClient(hostUrl, httpMessageHandler);
         }
 
-        public static CamundaClient Create(HttpClient httpClient, Assembly enteryAssembly = null)
+        public static CamundaClient Create(HttpClient httpClient)
         {
-            return new CamundaClient(httpClient, enteryAssembly);
+            return new CamundaClient(httpClient);
         }
 
         /// <see href="https://docs.camunda.org/manual/7.9/reference/rest/case-definition/"/>
