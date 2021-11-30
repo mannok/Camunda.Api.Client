@@ -9,5 +9,7 @@ namespace Camunda.Api.Client.ExternalTask
         /// Object containing a property for each of the requested variables.
         /// </summary>
         public Dictionary<string, VariableValue> Variables;
+
+        public override string ToString() => $"ExternalTask [Id={Id}, ActivityId={ActivityId}]";
     }
 }
