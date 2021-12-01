@@ -11,9 +11,8 @@ namespace Camunda.Api.Client.Worker
     {
         private string workerId = Guid.NewGuid().ToString(); // TODO: Make configurable
 
-        private Timer taskQueryTimer;
-        private long pollingIntervalInMilliseconds = 50; // every 50 milliseconds
-        private int maxDegreeOfParallelism = 2;
+        private CancellationTokenSource pollingCancellationTokenSource;
+        private int pollingIntervalInMilliseconds = 50; // every 50 milliseconds
         private int maxTasksToFetchAtOnce = 10;
         private long lockDurationInMilliseconds = 1 * 60 * 1000; // 1 minute
         private ExternalTaskService externalTaskService;
@@ -27,6 +26,8 @@ namespace Camunda.Api.Client.Worker
 
         public async Task DoPolling()
         {
+            if (pollingCancellationTokenSource?.Token.IsCancellationRequested ?? true) return;
+
             // Query External Tasks
             try
             {
@@ -47,11 +48,8 @@ namespace Camunda.Api.Client.Worker
                 Console.WriteLine(ex.Message);
             }
 
-            // schedule next run (if not stopped in between)
-            if (taskQueryTimer != null)
-            {
-                taskQueryTimer.Change(TimeSpan.FromMilliseconds(50), TimeSpan.FromMilliseconds(Timeout.Infinite));
-            }
+            await Task.Delay(pollingIntervalInMilliseconds);
+            await DoPolling();
         }
 
         private async Task Execute(LockedExternalTask externalTask)
@@ -92,21 +90,26 @@ namespace Camunda.Api.Client.Worker
 
         public void StartWork()
         {
-            taskQueryTimer = new Timer(_ => DoPolling().Wait(), null, pollingIntervalInMilliseconds, Timeout.Infinite);
+            if (pollingCancellationTokenSource != null) throw new Exception("work has been started already");
+
+            pollingCancellationTokenSource = new CancellationTokenSource();
+
+            DoPolling().ContinueWith(_ => { });
         }
 
         public void StopWork()
         {
-            taskQueryTimer.Dispose();
-            taskQueryTimer = null;
+            if (pollingCancellationTokenSource == null) throw new Exception("no work has been started before");
+
+            pollingCancellationTokenSource.Cancel();
+            pollingCancellationTokenSource.Dispose();
+            pollingCancellationTokenSource = null;
         }
 
         public void Dispose()
         {
-            if (taskQueryTimer != null)
-            {
-                taskQueryTimer.Dispose();
-            }
+            pollingCancellationTokenSource?.Cancel();
+            pollingCancellationTokenSource?.Dispose();
         }
     }
 }

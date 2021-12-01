@@ -61,7 +61,7 @@ namespace Camunda.Api.Client.Tests
         [Test, Order(2)]
         public async Task StressTest()
         {
-            var piInfos = await Task.WhenAll(Enumerable.Range(0, 30).AsParallel().Select(x =>
+            var piInfos = await Task.WhenAll(Enumerable.Range(0, 300).AsParallel().Select(x =>
                 camundaClient.ProcessDefinitions[TargetProcessDefinitionInfo.Id].StartProcessInstance(new StartProcessInstance() { })
             ).ToArray());
 

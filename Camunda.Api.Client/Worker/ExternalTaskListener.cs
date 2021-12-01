@@ -16,44 +16,49 @@ namespace Camunda.Api.Client.Worker
 
         private string workerId = Guid.NewGuid().ToString();
 
-        private long pollingIntervalInMilliseconds; // every 50 milliseconds
-        private int maxDegreeOfParallelism;
+        private int pollingIntervalInMilliseconds; // every 50 milliseconds
 
         private long lockDurationInMilliseconds = 1 * 60 * 1000; // 1 minute
-        private Timer taskQueryTimer;
+        private CancellationTokenSource pollingCancellationTokenSource;
 
         private ExternalTaskService externalTaskService;
         private IEnumerable<ExternalTaskWorkerInfo> workerInfos;
 
-        public ExternalTaskListener(ExternalTaskService externalTaskService, IEnumerable<ExternalTaskWorkerInfo> workerInfos, int pollingIntervalInMilliseconds = 50, int maxDegreeOfParallelism = 32)
+        public ExternalTaskListener(ExternalTaskService externalTaskService, IEnumerable<ExternalTaskWorkerInfo> workerInfos, int pollingIntervalInMilliseconds = 50)
         {
             this.externalTaskService = externalTaskService;
             this.workerInfos = workerInfos;
             this.pollingIntervalInMilliseconds = pollingIntervalInMilliseconds;
-            this.maxDegreeOfParallelism = maxDegreeOfParallelism;
         }
 
         public void StartWork()
         {
-            taskQueryTimer = new Timer(_ => DoPolling().Wait(), null, pollingIntervalInMilliseconds, Timeout.Infinite);
+            if (pollingCancellationTokenSource != null) throw new Exception("work has been started already");
+
+            pollingCancellationTokenSource = new CancellationTokenSource();
+
+            DoPolling().ContinueWith(_ => { });
         }
 
         public void StopWork()
         {
-            this.taskQueryTimer.Dispose();
-            this.taskQueryTimer = null;
+            if (pollingCancellationTokenSource == null) throw new Exception("no work has been started before");
+
+            pollingCancellationTokenSource.Cancel();
+            pollingCancellationTokenSource.Dispose();
+            pollingCancellationTokenSource = null;
         }
 
         public void Dispose()
         {
-            if (this.taskQueryTimer != null)
-            {
-                this.taskQueryTimer.Dispose();
-            }
+            pollingCancellationTokenSource?.Cancel();
+            pollingCancellationTokenSource?.Dispose();
         }
 
         public async Task DoPolling()
         {
+            if (pollingCancellationTokenSource?.Token.IsCancellationRequested ?? true) return;
+
             // Query External Tasks
             try
             {
@@ -110,11 +115,8 @@ namespace Camunda.Api.Client.Worker
                 logger.Fatal(ex);
             }
 
-            // schedule next run (if not stopped in between)
-            if (taskQueryTimer != null)
-            {
-                taskQueryTimer.Change(TimeSpan.FromMilliseconds(pollingIntervalInMilliseconds), TimeSpan.FromMilliseconds(Timeout.Infinite));
-            }
+            await Task.Delay(pollingIntervalInMilliseconds);
+            await DoPolling();
         }
 
         private async Task Execute(LockedExternalTask externalTask, ExternalTaskWorkerInfo taskWorkerInfo)
