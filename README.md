@@ -1,3 +1,10 @@
+# This branch to enhance the existing Rest API client 
+- Support docker containerized in Linux platform
+- Support high available architecture
+- Develop Camunda console client to poll camunda to start the external worker. The console client will support multiple clients to improve the performance.
+- Implement .NET attribute and interface the define the external worker startup location
+- Detect the incorrect external worker configuration in the source code.
+
 # Camunda REST API Client [![Build status](https://ci.appveyor.com/api/projects/status/l2ct8th9hwuwlqvf?svg=true)](https://ci.appveyor.com/project/jlucansky/camunda-api-client) [![NuGet](https://img.shields.io/nuget/v/Camunda.Api.Client.svg)](https://www.nuget.org/packages/Camunda.Api.Client)
 Camunda REST API Client for .NET platform
 - [x] .NET Framework 4.6.1
