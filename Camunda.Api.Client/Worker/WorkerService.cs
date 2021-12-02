@@ -34,13 +34,13 @@ namespace Camunda.Api.Client
         public void StartupWithSingleThreadPolling()
         {
             logger.Info("call StartupWithSingleThreadPolling");
-            this.StartWorkerListener();
+            StartWorkerListener();
         }
 
         public void ShutdownSingleThreadPolling()
         {
             logger.Info("call ShutdownSingleThreadPolling");
-            this.StopWorkerListener();
+            StopWorkerListener();
         }
 
         public void StartWorkerListener()
