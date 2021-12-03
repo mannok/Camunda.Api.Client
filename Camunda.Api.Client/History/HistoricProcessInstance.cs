@@ -8,66 +8,66 @@ namespace Camunda.Api.Client.History
         /// <summary>
         /// The id of the process instance.
         /// </summary>
-        public string Id;
+        public string Id { get; set; }
         /// <summary>
         /// The business key of the process instance.
         /// </summary>
-        public string BusinessKey;
+        public string BusinessKey { get; set; }
         /// <summary>
         /// The id of the process definition that this process instance belongs to.
         /// </summary>
-        public string ProcessDefinitionId;
+        public string ProcessDefinitionId { get; set; }
         /// <summary>
         /// The key of the process definition that this process instance belongs to.
         /// </summary>
-        public string ProcessDefinitionKey;
+        public string ProcessDefinitionKey { get; set; }
         /// <summary>
         /// The name of the process definition that this process instance belongs to.
         /// </summary>
-        public string ProcessDefinitionName;
+        public string ProcessDefinitionName { get; set; }
         /// <summary>
         /// The time the instance was started.
         /// </summary>
-        public DateTime StartTime;
+        public DateTime StartTime { get; set; }
         /// <summary>
         /// The time the instance ended.
         /// </summary>
-        public DateTime EndTime;
+        public DateTime EndTime { get; set; }
         /// <summary>
         /// The time the instance took to finish (in milliseconds).
         /// </summary>
-        public long DurationInMillis;
+        public long DurationInMillis { get; set; }
         /// <summary>
         /// The id of the user who started the process instance.
         /// </summary>
-        public string StartUserId;
+        public string StartUserId { get; set; }
         /// <summary>
         /// The id of the initial activity that was executed (e.g., a start event).
         /// </summary>
-        public string StartActivityId;
+        public string StartActivityId { get; set; }
         /// <summary>
         /// The provided delete reason in case the process instance was canceled during execution./// </summary>
-        public string DeleteReason;
+        public string DeleteReason { get; set; }
         /// <summary>
         /// The id of the parent process instance, if it exists.
         /// </summary>
-        public string SuperProcessInstanceId;
+        public string SuperProcessInstanceId { get; set; }
         /// <summary>
         /// The id of the parent case instance, if it exists.
         /// </summary>
-        public string SuperCaseInstanceId;
+        public string SuperCaseInstanceId { get; set; }
         /// <summary>
         /// The id of the parent case instance, if it exists.
         /// </summary>
-        public string CaseInstanceId;
+        public string CaseInstanceId { get; set; }
         /// <summary>
         /// The tenant id of the process instance.
         /// </summary>
-        public string TenantId;
+        public string TenantId { get; set; }
         /// <summary>
         /// Last state of the process instance.
         /// </summary>
-        public ProcessInstanceState State;
+        public ProcessInstanceState State { get; set; }
 
         public override string ToString() => Id;
     }
