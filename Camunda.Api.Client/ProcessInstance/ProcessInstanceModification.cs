@@ -15,6 +15,6 @@ namespace Camunda.Api.Client.ProcessInstance
         /// <summary>
         /// An array of modification instructions. The instructions are executed in the order they are in. 
         /// </summary>
-        public List<ProcessInstanceModificationInstruction> Instructions = new List<ProcessInstanceModificationInstruction>();
+        public List<ProcessInstanceModificationInstruction> Instructions { get; set; } = new List<ProcessInstanceModificationInstruction>();
     }
 }

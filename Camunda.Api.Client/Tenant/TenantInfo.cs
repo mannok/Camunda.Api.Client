@@ -5,11 +5,11 @@
         /// <summary>
         /// The id of the tenant.
         /// </summary>
-        public string Id;
+        public string Id { get; set; }
 
         /// <summary>
         /// The name of the tenant.
         /// </summary>
-        public string Name;
+        public string Name { get; set; }
     }
 }

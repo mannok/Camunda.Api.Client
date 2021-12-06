@@ -7,17 +7,17 @@ namespace Camunda.Api.Client.History
         /// <summary>
         /// Restrict to tasks that were completed before the given date. By default*, the date must have the format yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g., 2013-01-23T14:42:45.000+0200.
         /// </summary>
-        public DateTime? CompletedAfter;
+        public DateTime? CompletedAfter { get; set; }
 
         /// <summary>
         ///Restrict to tasks that were completed before the given date. By default*, the date must have the format yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g., 2013-01-23T14:42:45.000+0200.
         /// </summary>
-        public DateTime? CompletedBefore;
+        public DateTime? CompletedBefore { get; set; }
 
         /// <summary>
         /// When the report type is set to count, this parameter is Mandatory. Groups the tasks report by a given criterion. Valid values are taskName and processDefinition.
         /// </summary>
-        public GroupBy? GroupBy;
+        public GroupBy? GroupBy { get; set; }
 
         public HistoricTaskDurationReport()
         {

@@ -5,8 +5,8 @@
         /// <summary>
         /// The form key for the process definition.
         /// </summary>
-        public string Key;
-        public string ContextPath;
+        public string Key { get; set; }
+        public string ContextPath { get; set; }
 
         public override string ToString() => Key;
     }

@@ -5,11 +5,11 @@
         /// <summary>
         /// The name of the candidate group. If there are tasks without a group name, the value will be <c>null</c>.
         /// </summary>
-        public string GroupName;
+        public string GroupName { get; set; }
         /// <summary>
         /// The number of tasks which have the group name as candidate group.
         /// </summary>
-        public int TaskCount;
+        public int TaskCount { get; set; }
 
         public override string ToString()
         {

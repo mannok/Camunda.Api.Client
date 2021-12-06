@@ -7,23 +7,23 @@ namespace Camunda.Api.Client.Deployment
         /// <summary>
         /// The id of the deployment.
         /// </summary>
-        public string Id;
+        public string Id { get; set; }
         /// <summary>
         /// The name of the deployment.
         /// </summary>
-        public string Name;
+        public string Name { get; set; }
         /// <summary>
         /// The source of the deployment.
         /// </summary>
-        public string Source;
+        public string Source { get; set; }
         /// <summary>
         /// The time when the deployment was created.
         /// </summary>
-        public DateTime DeploymentTime;
+        public DateTime DeploymentTime { get; set; }
         /// <summary>
         /// The tenant id of the deployment.
         /// </summary>
-        public string TenantId;
+        public string TenantId { get; set; }
 
         public override string ToString() => Name ?? Id;
 

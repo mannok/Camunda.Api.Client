@@ -6,6 +6,6 @@ namespace Camunda.Api.Client
         /// <summary>
         /// Variable name
         /// </summary>
-        public string Name;
+        public string Name { get; set; }
     }
 }

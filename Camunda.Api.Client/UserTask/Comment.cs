@@ -5,7 +5,7 @@
         /// <summary>
         /// The content of the comment.
         /// </summary>
-        public string Message;
+        public string Message { get; set; }
 
         public override string ToString() => Message;
     }

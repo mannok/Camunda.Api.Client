@@ -5,6 +5,6 @@
         /// <summary>
         /// The process definition.
         /// </summary>
-        public ProcessDefinitionInfo Definition;
+        public ProcessDefinitionInfo Definition { get; set; }
     }
 }

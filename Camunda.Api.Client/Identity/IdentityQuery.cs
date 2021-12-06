@@ -5,6 +5,6 @@
         /// <summary>
         /// The id of the user to get the groups for.
         /// </summary>
-        public string UserId;
+        public string UserId { get; set; }
     }
 }

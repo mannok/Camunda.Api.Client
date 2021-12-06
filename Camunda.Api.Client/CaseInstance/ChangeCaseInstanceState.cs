@@ -13,6 +13,6 @@ namespace Camunda.Api.Client.CaseInstance
         public Dictionary<string, CaseInstanceVariableValue> Variables;
 
         [JsonProperty("deletions")]
-        public List<CaseInstanceDeleteVariable> Deletions;
+        public List<CaseInstanceDeleteVariable> Deletions { get; set; }
     }
 }

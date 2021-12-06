@@ -2,19 +2,19 @@
 {
     public class HistoricCaseDefinitionStatisticsResult
     {
-        public string Id;
+        public string Id { get; set; }
 
-        public int Active;
+        public int Active { get; set; }
 
-        public int Available;
+        public int Available { get; set; }
 
-        public int Completed;
+        public int Completed { get; set; }
 
-        public int Disabled;
+        public int Disabled { get; set; }
 
-        public int Enabled;
+        public int Enabled { get; set; }
 
-        public int Terminated;
+        public int Terminated { get; set; }
 
         public override string ToString() => Id;
     }

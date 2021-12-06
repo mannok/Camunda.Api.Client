@@ -10,17 +10,17 @@ namespace Camunda.Api.Client.Message
         /// Indicates if the message was correlated to a message start event or an intermediate message catching event.
         /// In the first case, the <see cref="ResultType"/> is <see cref="MessageCorrelationResultType.ProcessDefinition"/> and otherwise <see cref="MessageCorrelationResultType.Execution"/>.
         /// </summary>
-        public MessageCorrelationResultType ResultType;
+        public MessageCorrelationResultType ResultType { get; set; }
 
         /// <summary>
         /// This property only has a value if the <see cref="ResultType"/> is set to <see cref="MessageCorrelationResultType.Execution"/>.
         /// </summary>
-        public ExecutionInfo Execution;
+        public ExecutionInfo Execution { get; set; }
 
         /// <summary>
         /// This property only has a value if the <see cref="ResultType"/> is set to <see cref="MessageCorrelationResultType.ProcessDefinition"/>
         /// </summary>
-        public ProcessInstanceInfo ProcessInstance;
+        public ProcessInstanceInfo ProcessInstance { get; set; }
     }
 
     public enum MessageCorrelationResultType

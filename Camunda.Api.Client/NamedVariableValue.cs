@@ -3,7 +3,7 @@ namespace Camunda.Api.Client
 {
     public class NamedVariableValue : VariableValue
     {
-        public string Name;
+        public string Name { get; set; }
 
         protected NamedVariableValue() { }
 

@@ -6,7 +6,7 @@ namespace Camunda.Api.Client.ProcessInstance
         /// <summary>
         ///	Indicates whether the variable should be a local variable or not. If set to true, the variable becomes a local variable of the execution entering the target activity.
         /// </summary>
-        public bool Local;
+        public bool Local { get; set; }
 
         protected TriggerVariableValue() { }
 

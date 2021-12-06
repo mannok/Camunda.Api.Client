@@ -9,11 +9,11 @@ namespace Camunda.Api.Client.Identity
         /// <summary>
         /// The id of the user
         /// </summary>
-        public string AuthenticatedUser;
+        public string AuthenticatedUser { get; set; }
         /// <summary>
         /// Verification successful or not
         /// </summary>
-        public bool Authenticated;
+        public bool Authenticated { get; set; }
 
     }
 }

@@ -9,6 +9,6 @@ namespace Camunda.Api.Client.History
         /// <summary>
         /// Whether the task belongs to a process instance that is suspended.
         /// </summary>
-        public bool Suspended;
+        public bool Suspended { get; set; }
     }
 }

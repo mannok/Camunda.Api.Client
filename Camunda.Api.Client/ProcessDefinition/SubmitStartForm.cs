@@ -13,7 +13,7 @@ namespace Camunda.Api.Client.ProcessDefinition
         /// <summary>
         /// The business key the process instance is to be initialized with. The business key uniquely identifies the process instance in the context of the given process definition.
         /// </summary>
-        public string BusinessKey;
+        public string BusinessKey { get; set; }
 
         public SubmitStartForm SetVariable(string name, object value)
         {

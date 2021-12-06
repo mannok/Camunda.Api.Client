@@ -12,6 +12,6 @@ namespace Camunda.Api.Client.Migration
         /// The list of instruction validation reports. If no validation errors are detected it is an empty list.
         /// </summary>
         [JsonProperty("instructionReports")]
-        public List<MigrationInstructionValidationReport> InstructionReports;
+        public List<MigrationInstructionValidationReport> InstructionReports { get; set; }
     }
 }

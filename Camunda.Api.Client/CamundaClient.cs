@@ -69,19 +69,19 @@ namespace Camunda.Api.Client
 
         internal class HistoricApi
         {
-            public Lazy<IHistoricActivityInstanceRestService> ActivityInstanceApi;
-            public Lazy<IHistoricCaseActivityInstanceRestService> CaseActivityInstanceApi;
-            public Lazy<IHistoricCaseDefinitionRestService> CaseDefinitionApi;
-            public Lazy<IHistoricCaseInstanceRestService> CaseInstanceApi;
-            public Lazy<IHistoricDecisionInstanceRestService> DecisionInstanceApi;
-            public Lazy<IHistoricDetailRestService> DetailApi;
-            public Lazy<IHistoricIncidentRestService> IncidentApi;
-            public Lazy<IHistoricJobLogRestService> JobLogApi;
-            public Lazy<IHistoricProcessInstanceRestService> ProcessInstanceApi;
-            public Lazy<IHistoricVariableInstanceRestService> VariableInstanceApi;
-            public Lazy<IHistoricUserTaskRestService> UserTaskApi;
-            public Lazy<IHistoricProcessDefinitionRestService> ProcessDefinitionApi;
-            public Lazy<IHistoricExternalTaskLogRestService> ExternalTaskLogApi;
+            public Lazy<IHistoricActivityInstanceRestService> ActivityInstanceApi { get; set; }
+            public Lazy<IHistoricCaseActivityInstanceRestService> CaseActivityInstanceApi { get; set; }
+            public Lazy<IHistoricCaseDefinitionRestService> CaseDefinitionApi { get; set; }
+            public Lazy<IHistoricCaseInstanceRestService> CaseInstanceApi { get; set; }
+            public Lazy<IHistoricDecisionInstanceRestService> DecisionInstanceApi { get; set; }
+            public Lazy<IHistoricDetailRestService> DetailApi { get; set; }
+            public Lazy<IHistoricIncidentRestService> IncidentApi { get; set; }
+            public Lazy<IHistoricJobLogRestService> JobLogApi { get; set; }
+            public Lazy<IHistoricProcessInstanceRestService> ProcessInstanceApi { get; set; }
+            public Lazy<IHistoricVariableInstanceRestService> VariableInstanceApi { get; set; }
+            public Lazy<IHistoricUserTaskRestService> UserTaskApi { get; set; }
+            public Lazy<IHistoricProcessDefinitionRestService> ProcessDefinitionApi { get; set; }
+            public Lazy<IHistoricExternalTaskLogRestService> ExternalTaskLogApi { get; set; }
         }
 
         static CamundaClient()

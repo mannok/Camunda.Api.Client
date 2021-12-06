@@ -8,82 +8,82 @@ namespace Camunda.Api.Client.History
         /// <summary>
         /// Filter by historic job log id.
         /// </summary>
-        public string LogId;
+        public string LogId { get; set; }
         /// <summary>
         /// Filter by job id.
         /// </summary>
-        public string JobId;
+        public string JobId { get; set; }
         /// <summary>
         /// Filter by job exception message.
         /// </summary>
-        public string JobExceptionMessage;
+        public string JobExceptionMessage { get; set; }
         /// <summary>
         /// Filter by job definition id.
         /// </summary>
-        public string JobDefinitionId;
+        public string JobDefinitionId { get; set; }
         /// <summary>
         /// Filter by job definition type.
         /// </summary>
-        public string JobDefinitionType;
+        public string JobDefinitionType { get; set; }
         /// <summary>
         /// Filter by job definition configuration.
         /// </summary>
-        public string JobDefinitionConfiguration;
+        public string JobDefinitionConfiguration { get; set; }
         /// <summary>
         /// Only include historic job logs which belong to one of the passed activity ids.
         /// </summary>
         [JsonProperty("activityIdIn")]
-        public List<string> ActivityIds;
+        public List<string> ActivityIds { get; set; }
         /// <summary>
         /// Only include historic job logs which belong to one of the passed execution ids.
         /// </summary>
         [JsonProperty("executionIdIn")]
-        public List<string> ExecutionIds;
+        public List<string> ExecutionIds { get; set; }
         /// <summary>
         /// Filter by process instance id.
         /// </summary>
-        public string ProcessInstanceId;
+        public string ProcessInstanceId { get; set; }
         /// <summary>
         /// Filter by process definition id.
         /// </summary>
-        public string ProcessDefinitionId;
+        public string ProcessDefinitionId { get; set; }
         /// <summary>
         /// Filter by process definition key.
         /// </summary>
-        public string ProcessDefinitionKey;
+        public string ProcessDefinitionKey { get; set; }
         /// <summary>
         /// Filter by deployment id.
         /// </summary>
-        public string DeploymentId;
+        public string DeploymentId { get; set; }
         /// <summary>
         /// Only include creation logs. Value may only be true, as false is the default behavior.
         /// </summary>
-        public bool CreationLog;
+        public bool CreationLog { get; set; }
         /// <summary>
         /// Only include failure logs. Value may only be true, as false is the default behavior.
         /// </summary>
-        public bool FailureLog;
+        public bool FailureLog { get; set; }
         /// <summary>
         /// Only include success logs. Value may only be true, as false is the default behavior.
         /// </summary>
-        public bool SuccessLog;
+        public bool SuccessLog { get; set; }
         /// <summary>
         /// Only include deletion logs. Value may only be true, as false is the default behavior.
         /// </summary>
-        public bool DeletionLog;
+        public bool DeletionLog { get; set; }
         /// <summary>
         /// Only include logs for which the associated job had a priority higher than or equal to the given value. Value must be a valid long value.
         /// </summary>
-        public long JobPriorityHigherThanOrEquals;
+        public long JobPriorityHigherThanOrEquals { get; set; }
         /// <summary>
         /// Only include logs for which the associated job had a priority lower than or equal to the given value. Value must be a valid long value.
         /// </summary>
-        public long JobPriorityLowerThanOrEquals;
+        public long JobPriorityLowerThanOrEquals { get; set; }
         /// <summary>
         /// Only include historic job log entries which belong to one of the passed and comma-separated tenant ids.
         /// </summary>
         [JsonProperty("tenantIdIn")]
-        public List<string> TenantIds;
+        public List<string> TenantIds { get; set; }
     }
 
     public enum HistoricJobLogQuerySorting

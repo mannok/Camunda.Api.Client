@@ -8,11 +8,11 @@ namespace Camunda.Api.Client.History
         /// <summary>
         /// Specifies the granularity of the report.
         /// </summary>
-        public PeriodUnit PeriodUnit;
+        public PeriodUnit PeriodUnit { get; set; }
         /// <summary>
         /// Specifies the type of the report to retrieve.
         /// </summary>
-        public ReportType ReportType;
+        public ReportType ReportType { get; set; }
     }
 
     public enum PeriodUnit

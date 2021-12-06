@@ -7,12 +7,12 @@ namespace Camunda.Api.Client
         /// <summary>
         /// Comparison operator to be used.
         /// </summary>
-        public ConditionOperator Operator;
+        public ConditionOperator Operator { get; set; }
 
         /// <summary>
         /// Value may be String, Number or Boolean
         /// </summary>
-        public object Value;
+        public object Value { get; set; }
     }
 
     public enum ConditionOperator

@@ -5,7 +5,7 @@
         /// <summary>
         /// Filter by case instance id.
         /// </summary>
-        public string CaseInstanceId;
+        public string CaseInstanceId { get; set; }
     }
 
     public enum HistoricCaseActivityInstanceQuerySorting

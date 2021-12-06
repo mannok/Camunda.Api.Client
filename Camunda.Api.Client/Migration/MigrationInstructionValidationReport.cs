@@ -9,12 +9,12 @@ namespace Camunda.Api.Client.Migration
         /// A migration instruction object.
         /// </summary>
         [JsonProperty("instruction")]
-        public MigrationInstruction Instruction;
+        public MigrationInstruction Instruction { get; set; }
 
         /// <summary>
         /// A list of instruction validation report messages.
         /// </summary>
         [JsonProperty("failures")]
-        public List<string> Failures;
+        public List<string> Failures { get; set; }
     }
 }

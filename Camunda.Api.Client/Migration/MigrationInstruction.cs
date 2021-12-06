@@ -9,18 +9,18 @@ namespace Camunda.Api.Client.Migration
         /// The activity ids from the source process definition being mapped.
         /// </summary>
         [JsonProperty("sourceActivityIds")]
-        public List<string> SourceActivityIds;
+        public List<string> SourceActivityIds { get; set; }
 
         /// <summary>
         /// The activity ids from the target process definition being mapped.
         /// </summary>
         [JsonProperty("targetActivityIds")]
-        public List<string> TargetActivityIds;
+        public List<string> TargetActivityIds { get; set; }
 
         /// <summary>
         /// Configuration flag whether event triggers defined are going to be updated during migration.
         /// </summary>
         [JsonProperty("updateEventTrigger")]
-        public bool UpdateEventTrigger;
+        public bool UpdateEventTrigger { get; set; }
     }
 }

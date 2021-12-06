@@ -10,7 +10,7 @@ namespace Camunda.Api.Client
         /// <summary>
         /// Array of criteria to sort the result by. The position in the array identifies the rank of an ordering, i.e. whether it is primary, secondary, etc.
         /// </summary>
-        public List<SortingInfo<TSortingEnum>> Sorting = new List<SortingInfo<TSortingEnum>>();
+        public List<SortingInfo<TSortingEnum>> Sorting { get; set; } = new List<SortingInfo<TSortingEnum>>();
 
         public TQuery Sort(TSortingEnum sortBy, SortOrder sortOrder = SortOrder.Ascending)
         {

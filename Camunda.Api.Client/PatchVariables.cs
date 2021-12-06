@@ -12,6 +12,6 @@ namespace Camunda.Api.Client
         /// <summary>
         /// An array of String keys of variables to be deleted.
         /// </summary>
-        public List<string> Deletions;
+        public List<string> Deletions { get; set; }
     }
 }

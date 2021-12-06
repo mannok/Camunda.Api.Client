@@ -16,44 +16,44 @@ namespace Camunda.Api.Client.ExternalTask
         /// <summary>
         ///  A String value which enables the filtering of tasks based on process instance business key.
         /// </summary>
-        public string BusinessKey;
+        public string BusinessKey { get; set; }
 
         /// <summary>
         /// Determines whether serializable variable values (typically variables that store custom Java objects) should be deserialized on server side (default false).
         /// </summary>
-        public bool DeserializeValues;
+        public bool DeserializeValues { get; set; }
 
         /// <summary>
         /// If true only local variables will be fetched.
         /// </summary>
-        public bool LocalVariables;
+        public bool LocalVariables { get; set; }
 
         /// <summary>
         /// The duration to lock the external tasks for in milliseconds.
         /// </summary>
-        public long LockDuration;
+        public long LockDuration { get; set; }
 
         /// <summary>
         /// Filter tasks based on process definition id.
         /// </summary>
-        public string ProcessDefinitionId;
+        public string ProcessDefinitionId { get; set; }
 
         /// <summary>
         /// Filter tasks based on process definition ids.
         /// </summary>
         [JsonProperty("processDefinitionIdIn")]
-        public List<string> ProcessDefinitionIds = new List<string>();
+        public List<string> ProcessDefinitionIds { get; set; } = new List<string>();
 
         /// <summary>
         /// Filter tasks based on process definition key.
         /// </summary>
-        public string ProcessDefinitionKey;
+        public string ProcessDefinitionKey { get; set; }
 
         /// <summary>
         /// Filter tasks based on process definition keys.
         /// </summary>
         [JsonProperty("processDefinitionKeyIn")]
-        public List<string> ProcessDefinitionKeys = new List<string>();
+        public List<string> ProcessDefinitionKeys { get; set; } = new List<string>();
 
         /// <summary>
         /// A map of variables used for filtering tasks based on process instance variable values.
@@ -64,23 +64,23 @@ namespace Camunda.Api.Client.ExternalTask
         /// Filter tasks based on tenant ids.
         /// </summary>
         [JsonProperty("tenantIdIn")]
-        public List<string> TenantIds = new List<string>();
+        public List<string> TenantIds { get; set; } = new List<string>();
 
         /// <summary>
         /// The topic's name
         /// </summary>
-        public string TopicName;
+        public string TopicName { get; set; }
 
         /// <summary>
         /// Array of String values that represent variable names.
         /// For each result task belonging to this topic, the given variables are returned as well if they are accessible from the external task's execution.
         /// </summary>
-        public List<string> Variables;
+        public List<string> Variables { get; set; }
 
         /// <summary>
         /// Filter tasks without tenant id.
         /// </summary>
-        public bool WithoutTenantId;
+        public bool WithoutTenantId { get; set; }
 
         public override string ToString() => TopicName;
     }

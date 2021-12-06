@@ -9,11 +9,11 @@ namespace Camunda.Api.Client
         /// <summary>
         /// Mandatory. Sort the results lexicographically by a given criterion.
         /// </summary>
-        public TEnum SortBy;
+        public TEnum SortBy { get; set; }
         /// <summary>
         /// Mandatory. Sort the results in a given order. Values may be asc for ascending order or desc for descending order.
         /// </summary>
-        public SortOrder SortOrder;
+        public SortOrder SortOrder { get; set; }
 
         public Dictionary<string, object> Parameters;
 

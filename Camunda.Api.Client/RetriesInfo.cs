@@ -2,6 +2,6 @@
 {
     internal class RetriesInfo
     {
-        public long Retries;
+        public long Retries { get; set; }
     }
 }

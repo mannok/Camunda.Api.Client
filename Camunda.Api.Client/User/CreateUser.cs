@@ -2,8 +2,8 @@
 {
     internal class CreateUser
     {
-        public UserProfileInfo Profile;
+        public UserProfileInfo Profile { get; set; }
 
-        public UserCredentialsInfo Credentials;
+        public UserCredentialsInfo Credentials { get; set; }
     }
 }

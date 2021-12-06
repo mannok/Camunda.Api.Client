@@ -24,16 +24,16 @@ namespace Camunda.Api.Client.Identity
 
     public class IdentityGroup
     {
-        public string Id;
-        public string Name;
+        public string Id { get; set; }
+        public string Name { get; set; }
         public override string ToString() => Id;
     }
     public class IdentityUser
     {
-        public string Id;
-        public string FirstName;
-        public string LastName;
-        public string DisplayName;
+        public string Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string DisplayName { get; set; }
         public override string ToString() => Id;
     }
 

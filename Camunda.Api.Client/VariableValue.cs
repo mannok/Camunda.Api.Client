@@ -34,7 +34,7 @@ namespace Camunda.Api.Client
         /// The value type of the variable.
         /// </summary>
         [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public VariableType Type;
+        public VariableType Type { get; set; }
 
         /// <summary>
         /// Object containing additional, value-type-dependent properties.
@@ -55,7 +55,7 @@ namespace Camunda.Api.Client
         /// The variable's value.
         /// </summary>
         [JsonIgnore]
-        public object Value;
+        public object Value { get; set; }
 
         [JsonProperty("value"), DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private object rawValue
@@ -377,7 +377,7 @@ namespace Camunda.Api.Client
 
         private class SerializedTypedObject
         {
-            [JsonProperty("data")] public string Data;
+            [JsonProperty("data")] public string Data { get; set; }
         }
 
     }

@@ -5,11 +5,11 @@
         /// <summary>
         /// The id of the user to verify
         /// </summary>
-        public string Username;
+        public string Username { get; set; }
         /// <summary>
         /// The password of the user to verify
         /// </summary>
-        public string Password;
+        public string Password { get; set; }
 
     }
 }

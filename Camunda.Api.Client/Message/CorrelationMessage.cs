@@ -10,7 +10,7 @@ namespace Camunda.Api.Client.Message
         /// <summary>
         /// The name of the message to deliver.
         /// </summary>
-        public string MessageName;
+        public string MessageName { get; set; }
         /// <summary>
         /// Used for correlation of process instances that wait for incoming messages. Will only correlate to executions that belong to a process instance with the provided business key.
         /// </summary>
@@ -26,15 +26,15 @@ namespace Camunda.Api.Client.Message
         /// <summary>
         /// Used to correlate the message for a tenant with the given id. Will only correlate to executions and process definitions which belongs to the tenant.
         /// </summary>
-        public string TenantId;
+        public string TenantId { get; set; }
         /// <summary>
         /// A Boolean value that indicates whether the message should only be correlated to executions and process definitions which belongs to no tenant. Value may only be true, as false is the default behavior.
         /// </summary>
-        public bool WithoutTenantId;
+        public bool WithoutTenantId { get; set; }
         /// <summary>
         /// Used to correlate the message to the process instance with the given id. Must not be supplied in conjunction with a tenantId.
         /// </summary>
-        public string ProcessInstanceId;
+        public string ProcessInstanceId { get; set; }
         /// <summary>
         /// A Boolean value that indicates whether the message should be correlated to exactly one entity or multiple entities.
         /// If the value is set to false the message will be correlated to exactly one entity (execution or process definition).
@@ -46,7 +46,7 @@ namespace Camunda.Api.Client.Message
         /// If this property is set to true, there will be returned a list of message correlation result objects.
         /// Depending on the all property, there will be either one ore more returned results in the list.
         /// </summary>
-        public bool ResultEnabled;
+        public bool ResultEnabled { get; set; }
 
         public CorrelationMessage SetVariable(string name, object value)
         {

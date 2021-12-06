@@ -8,16 +8,16 @@ namespace Camunda.Api.Client.UserTask
         /// <summary>
         /// The id of the user to link to the task. If you set this parameter, you have to omit groupId.
         /// </summary>
-        public string UserId;
+        public string UserId { get; set; }
         /// <summary>
         /// The id of the group to link to the task. If you set this parameter, you have to omit userId.
         /// </summary>
-        public string GroupId;
+        public string GroupId { get; set; }
         /// <summary>
         /// The type of the identity link. Can be any defined type. assignee and owner are reserved types for the task assignee and owner.
         /// <seealso cref="IdentityLinkType"/>
         /// </summary>
-        public string Type;
+        public string Type { get; set; }
 
         public override string ToString()
         {

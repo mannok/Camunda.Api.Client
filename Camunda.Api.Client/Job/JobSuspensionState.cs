@@ -5,26 +5,26 @@
         /// <summary>
         /// The job definition id of the jobs to activate or suspend.
         /// </summary>
-        public string JobDefinitionId;
+        public string JobDefinitionId { get; set; }
         /// <summary>
         /// The process instance id of the jobs to activate or suspend.
         /// </summary>
-        public string ProcessInstanceId;
+        public string ProcessInstanceId { get; set; }
         /// <summary>
         /// The process definition id of the jobs to activate or suspend.
         /// </summary>
-        public string ProcessDefinitionId;
+        public string ProcessDefinitionId { get; set; }
         /// <summary>
         /// The process definition key of the jobs to activate or suspend.
         /// </summary>
-        public string ProcessDefinitionKey;
+        public string ProcessDefinitionKey { get; set; }
         /// <summary>
         /// Only activate or suspend jobs of a process definition which belongs to a tenant with the given id.
         /// </summary>
-        public string ProcessDefinitionTenantId;
+        public string ProcessDefinitionTenantId { get; set; }
         /// <summary>
         /// Only activate or suspend jobs of a process definition which belongs to no tenant.
         /// </summary>
-        public bool ProcessDefinitionWithoutTenantId;
+        public bool ProcessDefinitionWithoutTenantId { get; set; }
     }
 }

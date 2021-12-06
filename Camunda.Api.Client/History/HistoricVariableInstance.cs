@@ -7,63 +7,63 @@ namespace Camunda.Api.Client.History
         /// <summary>
         /// The id of the variable instance.
         /// </summary>
-        public string Id;
+        public string Id { get; set; }
         /// <summary>
         /// The name of the variable instance.
         /// </summary>
-        public string Name;
+        public string Name { get; set; }
         /// <summary>
         /// The key of the process definition the variable instance belongs to.
         /// </summary>
-        public string ProcessDefinitionKey;
+        public string ProcessDefinitionKey { get; set; }
         /// <summary>
         /// The id of the process definition the variable instance belongs to.
         /// </summary>
-        public string ProcessDefinitionId;
+        public string ProcessDefinitionId { get; set; }
         /// <summary>
         /// The id the process instance belongs to.
         /// </summary>
-        public string ProcessInstanceId;
+        public string ProcessInstanceId { get; set; }
         /// <summary>
         /// The execution id the variable instance belongs to.
         /// </summary>
-        public string ExecutionId;
+        public string ExecutionId { get; set; }
         /// <summary>
         /// The id of the activity instance in which the variable is valid.
         /// </summary>
-        public string ActivityInstanceId;
+        public string ActivityInstanceId { get; set; }
         /// <summary>
         /// The key of the case definition the variable instance belongs to.
         /// </summary>
-        public string CaseDefinitionKey;
+        public string CaseDefinitionKey { get; set; }
         /// <summary>
         /// The id of the case definition the variable instance belongs to.
         /// </summary>
-        public string CaseDefinitionId;
+        public string CaseDefinitionId { get; set; }
         /// <summary>
         /// The case instance id the variable instance belongs to.
         /// </summary>
-        public string CaseInstanceId;
+        public string CaseInstanceId { get; set; }
         /// <summary>
         /// The case execution id the variable instance belongs to.
         /// </summary>
-        public string CaseExecutionId;
+        public string CaseExecutionId { get; set; }
         /// <summary>
         /// The id of the task the variable instance belongs to.
         /// </summary>
-        public string TaskId;
+        public string TaskId { get; set; }
         /// <summary>
         /// The id of the tenant that this variable instance belongs to.
         /// </summary>
-        public string ErrorMessage;
+        public string ErrorMessage { get; set; }
         /// <summary>
         /// An error message in case a Java Serialized Object could not be de-serialized.
         /// </summary>
-        public string TenantId;
+        public string TenantId { get; set; }
         /// <summary>
         /// The current state of the variable. 
         /// </summary>
-        public HistoricVariableInstanceState State;
+        public HistoricVariableInstanceState State { get; set; }
 
         public override string ToString() => $"{Name} = {base.ToString()}";
     }

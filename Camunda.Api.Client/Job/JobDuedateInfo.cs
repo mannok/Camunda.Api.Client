@@ -7,6 +7,6 @@ namespace Camunda.Api.Client.Job
         /// <summary>
         /// The date to set when the job has the next execution.
         /// </summary>
-        public DateTime Duedate;
+        public DateTime Duedate { get; set; }
     }
 }

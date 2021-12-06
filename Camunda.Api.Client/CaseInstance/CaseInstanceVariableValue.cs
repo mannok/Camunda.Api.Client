@@ -9,6 +9,6 @@ namespace Camunda.Api.Client.CaseInstance
     public class CaseInstanceVariableValue : VariableValue
     {
         [JsonProperty("local")]
-        public bool Local;
+        public bool Local { get; set; }
     }
 }

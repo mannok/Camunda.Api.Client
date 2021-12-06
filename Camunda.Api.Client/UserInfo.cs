@@ -2,6 +2,6 @@
 {
     internal class UserInfo
     {
-        public string UserId;
+        public string UserId { get; set; }
     }
 }

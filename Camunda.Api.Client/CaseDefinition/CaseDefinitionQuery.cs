@@ -8,53 +8,53 @@ namespace Camunda.Api.Client.CaseDefinition
         /// <summary>
         /// Filter by case definition id.
         /// </summary>
-        public string CaseDefinitionId;
+        public string CaseDefinitionId { get; set; }
 
         /// <summary>
         /// Filter by case definition ids.
         /// </summary>
         [JsonProperty("caseDefinitionIdIn")]
-        public List<string> CaseDefinitionIds = new List<string>();
+        public List<string> CaseDefinitionIds { get; set; } = new List<string>();
 
         /// <summary>
         /// Filter by case definition name.
         /// </summary>
-        public string Name;
+        public string Name { get; set; }
 
         /// <summary>
         /// Filter by case definition names that the parameter is a substring of.
         /// </summary>
-        public string NameLike;
+        public string NameLike { get; set; }
 
         /// <summary>
         /// Filter by the deployment the id belongs to.
         /// </summary>
-        public string DeploymentId;
+        public string DeploymentId { get; set; }
 
         /// <summary>
         /// Filter by case definition key, i.e., the id in the CMMN XML.Exact match.
         /// </summary>
-        public string Key;
+        public string Key { get; set; }
 
         /// <summary>
         /// Filter by case definition keys that the parameter is a substring of.
         /// </summary>
-        public string KeyLike;
+        public string KeyLike { get; set; }
 
         /// <summary>
         /// Filter by case definition category. Exact match.
         /// </summary>
-        public string Category;
+        public string Category { get; set; }
 
         /// <summary>
         /// Filter by case definition categories that the parameter is a substring of.
         /// </summary>
-        public string CategoryLike;
+        public string CategoryLike { get; set; }
 
         /// <summary>
         /// Filter by case definition version.
         /// </summary>
-        public int? Version;
+        public int? Version { get; set; }
 
         /// <summary>
         /// Only include those case definitions that are latest versions. Value may only be true, as false is the default behavior.
@@ -64,18 +64,18 @@ namespace Camunda.Api.Client.CaseDefinition
         /// <summary>
         /// Filter by the name of the case definition resource. Exact match.
         /// </summary>
-        public string ResourceName;
+        public string ResourceName { get; set; }
 
         /// <summary>
         /// Filter by names of those case definition resources that the parameter is a substring of.
         /// </summary>
-        public string ResourceNameLike;
+        public string ResourceNameLike { get; set; }
 
         /// <summary>
         /// Filter by a comma-separated list of tenant ids. A case definition must have one of the given tenant ids.
         /// </summary>
         [JsonProperty("tenantIdIn")]
-        public List<string> TenantIds = new List<string>();
+        public List<string> TenantIds { get; set; } = new List<string>();
 
         /// <summary>
         /// Only include case definitions which belong to no tenant. Value may only be true, as false is the default behavior.
@@ -91,12 +91,12 @@ namespace Camunda.Api.Client.CaseDefinition
         /// <summary>
         /// Sort the results lexicographically by a given criterion. Must be used in conjunction with the <see cref="SortOrder"/> parameter.
         /// </summary>
-        public CaseDefinitionQuerySorting SortBy;
+        public CaseDefinitionQuerySorting SortBy { get; set; }
 
         /// <summary>
         /// Sort the results in a given order. Values may be asc for ascending order or desc for descending order. Must be used in conjunction with the sortBy parameter.
         /// </summary>
-        public SortOrder SortOrder;
+        public SortOrder SortOrder { get; set; }
     }
 
     public enum CaseDefinitionQuerySorting

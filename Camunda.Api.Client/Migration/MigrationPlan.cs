@@ -9,18 +9,18 @@ namespace Camunda.Api.Client.Migration
         /// The id of the source process definition for the migration.
         /// </summary>
         [JsonProperty("sourceProcessDefinitionId")]
-        public string SourceProcessDefinitionId;
+        public string SourceProcessDefinitionId { get; set; }
 
         /// <summary>
         /// The id of the target process definition for the migration.
         /// </summary>
         [JsonProperty("targetProcessDefinitionId")]
-        public string TargetProcessDefinitionId;
+        public string TargetProcessDefinitionId { get; set; }
 
         /// <summary>
         /// A list of migration instructions which map equal activities.
         /// </summary>
         [JsonProperty("instructions")]
-        public List<MigrationInstruction> Instructions;
+        public List<MigrationInstruction> Instructions { get; set; }
     }
 }

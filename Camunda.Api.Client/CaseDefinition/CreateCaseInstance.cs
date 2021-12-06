@@ -12,7 +12,7 @@ namespace Camunda.Api.Client.CaseDefinition
         /// <summary>
         /// The business key the case instance is to be initialized with. The business key uniquely identifies the case instance in the context of the given case definition.
         /// </summary>
-        public string BusinessKey;
+        public string BusinessKey { get; set; }
 
         public CreateCaseInstance SetVariable(string name, object value)
         {

@@ -5,15 +5,15 @@
 		/// <summary>
 		/// The id of the group
 		/// </summary>
-		public string Id;
+		public string Id { get; set; }
 		/// <summary>
 		/// The name of the group.
 		/// </summary>
-		public string Name;
+		public string Name { get; set; }
 		/// <summary>
 		/// The type of the group.
 		/// </summary>	
-		public string Type;
+		public string Type { get; set; }
 
 		public override string ToString() => Id;
 	}
