@@ -13,15 +13,17 @@ namespace Camunda.Api.Client.Worker
 
         private CancellationTokenSource pollingCancellationTokenSource;
         private int pollingIntervalInMilliseconds = 50; // every 50 milliseconds
+        private int maxDegreeOfParallelism;
         private int maxTasksToFetchAtOnce = 10;
         private long lockDurationInMilliseconds = 1 * 60 * 1000; // 1 minute
         private ExternalTaskService externalTaskService;
         private ExternalTaskTopicWorkerInfo taskWorkerInfo;
 
-        public ExternalTaskWorker(ExternalTaskService externalTaskService, ExternalTaskTopicWorkerInfo taskWorkerInfo)
+        public ExternalTaskWorker(ExternalTaskService externalTaskService, ExternalTaskTopicWorkerInfo taskWorkerInfo, int maxDegreeOfParallelism = 2)
         {
             this.externalTaskService = externalTaskService;
             this.taskWorkerInfo = taskWorkerInfo;
+            this.maxDegreeOfParallelism = maxDegreeOfParallelism;
         }
 
         public async Task DoPolling()
@@ -40,7 +42,11 @@ namespace Camunda.Api.Client.Worker
                     }
                 });
 
-                await Task.WhenAll(tasks.Select(externalTask => Execute(externalTask)).ToArray());
+                Parallel.ForEach(
+                    tasks, 
+                    new ParallelOptions() { MaxDegreeOfParallelism = maxDegreeOfParallelism }, 
+                    externalTask => Execute(externalTask).Wait()
+                );
             }
             catch (Exception ex)
             {

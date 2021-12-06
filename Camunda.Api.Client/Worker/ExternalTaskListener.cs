@@ -17,6 +17,7 @@ namespace Camunda.Api.Client.Worker
         private string workerId = Guid.NewGuid().ToString();
 
         private int pollingIntervalInMilliseconds; // every 50 milliseconds
+        private int maxDegreeOfParallelism;
 
         private long lockDurationInMilliseconds = 1 * 60 * 1000; // 1 minute
         private CancellationTokenSource pollingCancellationTokenSource;
@@ -24,11 +25,12 @@ namespace Camunda.Api.Client.Worker
         private ExternalTaskService externalTaskService;
         private IEnumerable<ExternalTaskWorkerInfo> workerInfos;
 
-        public ExternalTaskListener(ExternalTaskService externalTaskService, IEnumerable<ExternalTaskWorkerInfo> workerInfos, int pollingIntervalInMilliseconds = 50)
+        public ExternalTaskListener(ExternalTaskService externalTaskService, IEnumerable<ExternalTaskWorkerInfo> workerInfos, int pollingIntervalInMilliseconds = 50, int maxDegreeOfParallelism = 32)
         {
             this.externalTaskService = externalTaskService;
             this.workerInfos = workerInfos;
             this.pollingIntervalInMilliseconds = pollingIntervalInMilliseconds;
+            this.maxDegreeOfParallelism = maxDegreeOfParallelism;
         }
 
         public void StartWork()
@@ -64,49 +66,49 @@ namespace Camunda.Api.Client.Worker
             {
                 var camundaPendingTasks = await externalTaskService.Query().List();
 
-                await Task.WhenAll(camundaPendingTasks.Select(async camundaPendingTask =>
-                {
-                    try
-                    {
+                Parallel.ForEach(camundaPendingTasks, new ParallelOptions() { MaxDegreeOfParallelism = maxDegreeOfParallelism }, camundaPendingTask =>
+                  {
+                      try
+                      {
                         // get the assembly in the list
                         if (!string.IsNullOrEmpty(camundaPendingTask.Id) && !string.IsNullOrEmpty(camundaPendingTask.TopicName))
-                        {
+                          {
                             // find the matched assembly
                             var workers = workerInfos.Where(x => x.ProcessId == camundaPendingTask.ProcessDefinitionKey && x.ActivityId == camundaPendingTask.ActivityId);
 
-                            if (workers.Count() > 1)
-                            {
-                                throw new Exception("More than one adapter found in the assembly");
-                            }
+                              if (workers.Count() > 1)
+                              {
+                                  throw new Exception("More than one adapter found in the assembly");
+                              }
 
-                            var worker = workers.Single();
-                            var tasks = await externalTaskService.FetchAndLock(new FetchExternalTasks()
-                            {
-                                WorkerId = workerId,
-                                MaxTasks = 1,
-                                Topics = new List<FetchExternalTaskTopic>() {
+                              var worker = workers.Single();
+                              var tasks = externalTaskService.FetchAndLock(new FetchExternalTasks()
+                              {
+                                  WorkerId = workerId,
+                                  MaxTasks = 1,
+                                  Topics = new List<FetchExternalTaskTopic>() {
                                     new FetchExternalTaskTopic(camundaPendingTask.TopicName, lockDurationInMilliseconds) { Variables = worker.VariablesToFetch }
-                                }
-                            });
+                                  }
+                              }).Result;
 
-                            if (tasks.Count() > 1)
-                            {
-                                throw new Exception("More than one task return from Camunda");
-                            }
-                            else if (tasks.Count() <= 1)
-                            {
-                                logger.Warn(string.Format(@"another worker is locked for the task id {0}.", camundaPendingTask.Id));
-                            }
+                              if (tasks.Count() > 1)
+                              {
+                                  throw new Exception("More than one task return from Camunda");
+                              }
+                              else if (tasks.Count() <= 1)
+                              {
+                                  logger.Warn(string.Format(@"another worker is locked for the task id {0}.", camundaPendingTask.Id));
+                              }
 
-                            await Execute(tasks.Single(), worker);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        logger.Error(ex);
-                    }
-                }).ToArray());
+                              Execute(tasks.Single(), worker).Wait();
+                          }
+                      }
+                      catch (Exception ex)
+                      {
+                          Console.WriteLine(ex.Message);
+                          logger.Error(ex);
+                      }
+                  });
             }
             catch (Exception ex)
             {
