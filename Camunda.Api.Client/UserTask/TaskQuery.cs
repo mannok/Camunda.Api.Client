@@ -103,6 +103,9 @@ namespace Camunda.Api.Client.UserTask
         /// Restrict to tasks that have a key that has the parameter value as a substring.
         /// </summary>
         public string TaskDefinitionKeyLike { get; set; }
+        public string TaskId { get; set; }
+        [JsonProperty("taskIdIn")]
+        public List<string> TaskIds { get; set; } = new List<string>();
         /// <summary>
         /// Restrict to tasks that have the given description.
         /// </summary>
@@ -352,8 +355,10 @@ namespace Camunda.Api.Client.UserTask
             if (isVariableSorting ^ variable != null)
                 throw new ArgumentException("Variable is mandatory when sortBy is either processVariable, executionVariable, taskVariable, caseExecutionVariable or caseInstanceVariable.", nameof(variable));
 
-            if (variable != null) {
-                parameters = new Dictionary<string, object>() {
+            if (variable != null)
+            {
+                parameters = new Dictionary<string, object>()
+                {
                     ["variable"] = variable.VariableName,
                     ["type"] = variable.Type.ToString(),
                 };
